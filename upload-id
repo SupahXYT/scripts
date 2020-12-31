@@ -6,7 +6,7 @@ do
 	if [ "$1" -eq "$ID" ]
 	then
 		NAME="$(printf '%s\n' "$p" | cut -b 71-)"
-	        echo $NAME
+	        rclone copy /var/lib/transmission-daemon/downloads/"$NAME" jousd-drive:"$NAME" 
 	fi	
 done
 
