@@ -1,0 +1,12 @@
+#!/bin/bash
+
+transmission-remote -l | while IFS="" read -r p || [ -n "$p" ]
+do
+	ID="$(echo "$p" | awk '{print $1}')"
+	if [ "$1" -eq "$ID" ]
+	then
+		NAME="$(printf '%s\n' "$p" | cut -b 71-)"
+	        echo $NAME
+	fi	
+done
+
