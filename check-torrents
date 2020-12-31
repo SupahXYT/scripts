@@ -1,0 +1,16 @@
+#!/bin/bash
+
+transmission-remote -l | while read -r a; 
+do
+	ID="$(echo "$a" | cut -b 1-1)"
+	RATIO="$(echo "$a" | cut -b 50-50)"
+
+	if [ "$RATIO" -ge "1" ]
+	then
+		NAME="$(echo "$a" | cut -b 68-)"
+		echo "uploading and removing $NAME ..."
+		transmission-remote -t "$ID" -r
+		rclone copy /var/lib/transmission-daemon/downloads/"$NAME" jousd-drive:"$NAME"
+		sudo rm -r /var/lib/transmission-daemon/downloads/"$NAME"
+	fi
+done
