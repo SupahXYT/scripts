@@ -1,0 +1,13 @@
+#!/bin/bash
+
+transmission-remote -l | while IFS="" read -r p || [ -n "$p" ]
+do
+	ID="$(echo "$p" | awk '{print $1}')"
+	if [ "$1" = "$ID" ]
+	then
+		NAME="$(transmission-remote -t $ID -i | grep Name: | cut -b 9-)"
+		echo "uploading $NAME ... "
+	        rclone copy -P /var/lib/transmission-daemon/downloads/"$NAME" "$2""$NAME" 
+	fi	
+done
+

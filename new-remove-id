@@ -1,0 +1,15 @@
+#!/bin/bash
+
+transmission-remote -l | while IFS="" read -r p || [ -n "$p" ]
+do
+	ID="$(echo "$p" | awk '{print $1}')"
+	if [ "$1" -eq "$ID" ]
+	then
+		NAME="$(transmission-remote -t $ID -i | grep Name: | cut -b 9-)"
+		echo "uploading $NAME ..."
+	        rclone copy -P /var/lib/transmission-daemon/downloads/"$NAME" jousd-drive:"$NAME" 
+		echo "Removing $NAME..."
+		transmission-remote -t $ID -rad
+	fi	
+done
+
