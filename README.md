@@ -1,5 +1,5 @@
 
-# Definitly using this for legitmate reasons and downloading linux ISOs
+# Definetly using this for legitmate reasons and downloading linux ISOs
 These are some scripts I utilize on my VPS and want to sync across all my devices. I also took this as an oppurtunity to learn git and vim. I guess I could have a description for each of them here. I'll add some sort of configuration and integrate it into a larger program later but right now this is all I need. 
 
 ## check-torrents
@@ -33,7 +33,7 @@ This uploads the files of a torrent according to its ID in transmission without 
 Run `upload-id [ID]` to use.
 
 ## upload-completed
-This uploads all completed torrents without removing them. This makes upload-id irrevelent lol.
+This uploads all completed torrents without removing them. This makes upload-id irrevelent lol, but I guess upload-id can still be used for partially downloaded torrents.
 
 ### Usage
 Just run the script. No paramters. 
