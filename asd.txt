@@ -1,0 +1,34 @@
+#!/bin/bash 
+
+PAGENAME="$( echo $1 | cut -d '/' -f 4 )"
+wget -O $PAGENAME $1
+
+# get list of "File:" pages: 
+echo "Downloading filepages"
+grep "File:" $PAGENAME | cut -d '"' -f 8 | sed 's/^/https:\/\/jojowiki.com/' > filepages
+
+mkdir -p "${PAGENAME}_filepages"
+cd "${PAGENAME}_filepages"
+
+# download every page in filepages 
+wget -qi ../filepages && echo done
+
+# get actual image from file page
+
+echo "Scraping images from jojowiki"
+
+mkdir ../"${PAGENAME}_images"
+cd ../"${PAGENAME}_images"
+
+for FILE in ../"${PAGENAME}_filepages"/*
+do
+	IMAGE="$( grep "og:image" $FILE | cut -d '"' -f 4 )"
+	wget $IMAGE
+done
+
+cd ..
+
+# example command
+#
+# jojoscrape "https://jojowiki.com/Genga_Archive"
+
