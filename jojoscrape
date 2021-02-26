@@ -1,10 +1,10 @@
 #!/bin/bash 
 
-PAGENAME="$( echo $1 | cut -d '/' -f 4 )"
+PAGENAME="$( echo "$1" | cut -d '/' -f 4 )"
 wget -O $PAGENAME $1
 
 # get list of "File:" pages: 
-echo "Downloading filepages"
+echo "Downloading filepages..."
 grep "File:" $PAGENAME | cut -d '"' -f 8 | sed 's/^/https:\/\/jojowiki.com/' > filepages
 
 mkdir -p "${PAGENAME}_filepages"
@@ -14,8 +14,7 @@ cd "${PAGENAME}_filepages"
 wget -qi ../filepages && echo done
 
 # get actual image from file page
-
-echo "Scraping images from jojowiki"
+echo "Scraping images from jojowiki..."
 
 mkdir ../"${PAGENAME}_images"
 cd ../"${PAGENAME}_images"
@@ -26,7 +25,14 @@ do
 	wget $IMAGE
 done
 
+echo "Finished downloading $(ls | wc -l ) images"
 cd ..
+
+# Cleaning up
+
+rm filepages
+rm "$PAGENAME"
+rm -r "${PAGENAME}_filepages"
 
 # example command
 #
