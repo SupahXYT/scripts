@@ -1,18 +1,21 @@
 #!/bin/sh
 
-start ()
-{
-	echo "Changing /var/lib/transmission group"
-	sudo chgrp -R supahx /var/lib/transmisson
+help="usage:  anistart <operation>
+operations:
+    anistart {-s --start}
+    anistart {-S --stop}
+    anistart {-h --help}"
 
+start()
+{
 	echo "Mounting rclone"
 	ping -qc1 8.8.8.8 > /dev/null 2>&1 \
-		&& rclone mount --daemon jousd-drive: /media/drive/jousd-drive-root \
-		&& rclone mount --daemon jousd-drive-crypt: /media/drive/jousd-drive-crypt \
+		&& rclone mount --daemon --allow-other jousd-drive: /media/drive/jousd-drive-root \
+		&& rclone mount --daemon --allow-other jousd-drive-crypt: /media/drive/jousd-drive-crypt \
 		|| echo "Error: no internet" 
 }
 
-stop ()
+stop()
 {
 	echo "Unmounting rclone"
 	[ -n "$(pgrep rclone)" ] \
@@ -28,10 +31,10 @@ case $1 in
 	stop
 	;;
 -h | --help)
-	printf "anistart usage: anistart <option>\noptions:\n"
+	printf "%s \n" "$help"
 	;;
 *)
-	printf "anistart: option '%s' not found\nUse '-h' for options\n" "$1"
+	printf "anistart: invalid option -- '%s'\n" "$1"
 	;;
 esac
 
