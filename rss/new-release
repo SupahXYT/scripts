@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# I've been thinking about allowing comments and newlines to the releases file, 
+# but that adds unnecessay bloat. Who cares about human readability am I right?
+
+cat $HOME/.config/nyaarss/urls | while IFS="" read -r p || [ -n "$p" ]
+do
+	LATEST=$( curl -s $p | grep ".torrent" | head -n 1 | sed -e 's/<[^>]*>//g' )
+	transmission-remote -w /var/lib/transmission/downloads/rss -a $LATEST
+done
+

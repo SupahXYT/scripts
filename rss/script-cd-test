@@ -1,8 +1,0 @@
-#!/bin/bash 
-
-while /bin/true 
-do
-	cd ~
-	sleep 5
-	cd - > /dev/null
-done &

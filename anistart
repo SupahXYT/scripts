@@ -12,6 +12,7 @@ start()
 	ping -qc1 8.8.8.8 > /dev/null 2>&1 \
 		&& rclone mount --daemon --allow-other jousd-drive: /media/drive/jousd-drive-root \
 		&& rclone mount --daemon --allow-other jousd-drive-crypt: /media/drive/jousd-drive-crypt \
+		&& rclone mount --daemon --allow-other jousd-drive-subeki: /media/drive/jousd-drive-subeki\
 		|| echo "Error: no internet" 
 }
 
@@ -20,7 +21,8 @@ stop()
 	echo "Unmounting rclone"
 	[ -n "$(pgrep rclone)" ] \
 		&& sudo fusermount -u /media/drive/jousd-drive-root \
-		&& sudo fusermount -u /media/drive/jousd-drive-crypt 
+		&& sudo fusermount -u /media/drive/jousd-drive-crypt \
+		&& sudo fusermount -u /media/drive/jousd-drive-subeki
 }
 
 case $1 in 

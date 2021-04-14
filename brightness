@@ -1,0 +1,36 @@
+#!/bin/sh
+
+low()
+{
+	doas su -c "echo 4000 > /sys/class/backlight/intel_backlight/brightness"
+}
+
+high()
+{
+	doas su -c "echo 10000 > /sys/class/backlight/intel_backlight/brightness"
+}
+
+min()
+{
+	doas su -c "echo 1000 > /sys/class/backlight/intel_backlight/brightness"
+}
+
+max()
+{
+	doas su -c "echo 16000 > /sys/class/backlight/intel_backlight/brightness"
+}
+
+case $1 in
+-l | --low)
+	low
+	;;
+-h | --high)
+	high
+	;;
+-m | --min)	
+	min
+	;;
+-M | --max)
+	max
+	;;
+esac
