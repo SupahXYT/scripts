@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cat "$1" | while read -r l
+do
+	DIR=$(echo $l | cut -d ' ' -f 2)
+	TORRENT=$(echo $l | cut -d ' ' -f 1)
+	transmission-remote -w /var/lib/transmission/downloads/$DIR -a "$TORRENT"
+done
+
+# Example with file links.txt:
+
+# links.txt:
+
+# asdf.torrent audio
+# https://torrent.com/torrent.torrent misc/large
+
+# command:
+# add-torrents test.txt
+

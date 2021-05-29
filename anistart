@@ -23,11 +23,10 @@ start()
 stop()
 {
 	echo "Unmounting rclone"
-	[ -n "$(pgrep rclone)" ] \
-		; sudo fusermount -zu /media/drive/jousd-drive-root \
-		; sudo fusermount -zu /media/drive/jousd-drive-timing\
-		; sudo fusermount -zu /media/drive/jousd-drive-subeki \
-		; sudo fusermount -zu /media/drive/jousd-drive-neocrypt 
+	sudo fusermount -zu /media/drive/jousd-drive-root 
+	sudo fusermount -zu /media/drive/jousd-drive-timing
+	sudo fusermount -zu /media/drive/jousd-drive-subeki  
+	sudo fusermount -zu /media/drive/jousd-drive-neocrypt 
 }
 
 case $1 in 
