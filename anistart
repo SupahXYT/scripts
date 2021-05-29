@@ -8,11 +8,15 @@ operations:
 
 start()
 {
+	RCLONE_CONFIG_PASS="$(pass rclone/config)"
+	export RCLONE_CONFIG_PASS
+
 	echo "Mounting rclone"
 	ping -qc1 8.8.8.8 > /dev/null 2>&1 \
-		&& rclone mount --daemon --allow-other jousd-drive: /media/drive/jousd-drive-root \
-		&& rclone mount --daemon --allow-other jousd-drive-timing: /media/drive/jousd-drive-timing\
-		&& rclone mount --daemon --allow-other jousd-drive-subeki: /media/drive/jousd-drive-subeki \
+		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive: /media/drive/jousd-drive-root \
+		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive-timing: /media/drive/jousd-drive-timing \
+		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive-subeki: /media/drive/jousd-drive-subeki \
+		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive-neocrypt: /media/drive/jousd-drive-neocrypt \
 		|| echo "Error: no internet" 
 }
 
@@ -20,9 +24,10 @@ stop()
 {
 	echo "Unmounting rclone"
 	[ -n "$(pgrep rclone)" ] \
-		&& sudo fusermount -u /media/drive/jousd-drive-root \
-		&& sudo fusermount -u /media/drive/jousd-drive-timing\
-		&& sudo fusermount -u /media/drive/jousd-drive-subeki
+		; sudo fusermount -zu /media/drive/jousd-drive-root \
+		; sudo fusermount -zu /media/drive/jousd-drive-timing\
+		; sudo fusermount -zu /media/drive/jousd-drive-subeki \
+		; sudo fusermount -zu /media/drive/jousd-drive-neocrypt 
 }
 
 case $1 in 
