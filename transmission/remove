@@ -18,5 +18,5 @@ printf "${RED}REMOVING $NAME\n"
 transmission-remote -t $ID -rad
 
 # Example usage:
-# ./completed 12 jousd-drive-neocrypt:
+# ./remove 12 jousd-drive-neocrypt:
 

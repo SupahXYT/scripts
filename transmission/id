@@ -12,9 +12,9 @@ NC='\033[0m' # No color (terminate color)
 NAME=$(transmission-remote -t $ID -i | grep Name: | cut -b 9-)
 DIR=$(transmission-remote -t $ID -i | grep Location: | cut -b 13-)
 REMOTE_PATH=$(echo $DIR | sed -n 's/\/var\/lib\/transmission\/downloads\///p')
-printf "Uploading ${RED}$NAME${NC} to ${YELLOW}$REMOTE$REMOTE_PATH${NC}...\n"
-rclone copyto -Pv "$DIR/$NAME" "$REMOTE$REMOTE_PATH$NAME"
+printf "Uploading ${RED}$NAME${NC} to ${YELLOW}$REMOTE$REMOTE_PATH/${NC}...\n"
+rclone copyto -Pv "$DIR/$NAME" "$REMOTE$REMOTE_PATH/$NAME"
 
 # Example usage:
-# ./completed 12 jousd-drive-neocrypt:
+# ./id 12 jousd-drive-neocrypt:
 
