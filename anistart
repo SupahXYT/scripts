@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh 
 
 help="usage:  anistart <operation>
 operations:
@@ -6,42 +6,54 @@ operations:
     anistart {-S --stop}
     anistart {-h --help}"
 
+remote=( "jousd-drive:" "jousd-drive-timing:" "jousd-drive-subeki:" "jousd-drive-neocrypt:" )
+mountpoint=( "/media/drive/jousd-drive-root" "/media/drive/jousd-drive-timing" "/media/drive/jousd-drive-subeki" "/media/drive/jousd-drive-neocrypt" )
+flags="--ask-password=false --daemon --allow-other"
+
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No color (terminate color)
+
+remote_mount()
+{
+	i=0;
+	while [ $i -lt "${#remote[@]}" ]; do
+		printf "Mounting ${RED}${remote[$i]}${NC} to ${YELLOW}${mountpoint[$i]}${NC}\n"
+		rclone mount $flags ${remote[$i]} ${mountpoint[$i]}
+		i=$(( i + 1 ))
+	done
+}
+
 start()
 {
 	RCLONE_CONFIG_PASS="$(pass rclone/config)"
-	export RCLONE_CONFIG_PASS
-
-	echo "Mounting rclone"
-	ping -qc1 8.8.8.8 > /dev/null 2>&1 \
-		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive: /media/drive/jousd-drive-root \
-		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive-timing: /media/drive/jousd-drive-timing \
-		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive-subeki: /media/drive/jousd-drive-subeki \
-		&& rclone mount --ask-password=false --daemon --allow-other jousd-drive-neocrypt: /media/drive/jousd-drive-neocrypt \
-		|| echo "Error: no internet" 
+        export RCLONE_CONFIG_PASS
+        ping -qc1 8.8.8.8 > /dev/null 2>&1 && remote_mount || printf "An error occured. Check internet connection or fuse modules.\n"
 }
 
 stop()
 {
-	echo "Unmounting rclone"
-	sudo fusermount -zu /media/drive/jousd-drive-root 
-	sudo fusermount -zu /media/drive/jousd-drive-timing
-	sudo fusermount -zu /media/drive/jousd-drive-subeki  
-	sudo fusermount -zu /media/drive/jousd-drive-neocrypt 
+	i=0;
+	while [ $i -lt "${#mountpoint[@]}" ]; do
+		printf "Unmounting ${YELLOW}${mountpoint[$i]}${NC}\n"
+		fusermount -zu ${mountpoint[$i]}
+		i=$(( i + 1 ))
+	done
+
 }
 
-case $1 in 
+case $1 in
 -s | --start)
-	start
-	;;
+        start
+        ;;
 -S | --stop)
-	stop
-	;;
+        stop
+        ;;
 -h | --help)
-	printf "%s\n" "$help"
-	;;
+        printf "%s\n" "$help"
+        ;;
 *)
-	printf "anistart: invalid option -- '%s'\n" "$1"
-	;;
+        printf "anistart: invalid option -- '%s'\n" "$1"
+        ;;
 esac
-
 
