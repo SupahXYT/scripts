@@ -4,7 +4,8 @@ curl $1 | grep "File:" | cut -d '"' -f 8 | sed 's/^/https:\/\/jojowiki.com/' > f
 
 cat filepages | while read -r p
         do
-                IMAGEURL=$( curl -s "$p" | grep og:image | cut -d \" -f 4 )
+                IMAGEURL=$( curl -s "$p" | grep fullMedia | cut -d \" -f 4 )
+		echo $IMAGEURL
                 wget -q "$IMAGEURL"
         done
 
