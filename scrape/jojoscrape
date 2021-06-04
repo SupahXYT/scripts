@@ -1,40 +1,11 @@
-#!/bin/bash 
+#!/bin/sh
 
-PAGENAME="$( echo "$1" | cut -d '/' -f 4 )"
-wget -O $PAGENAME $1
+curl $1 | grep "File:" | cut -d '"' -f 8 | sed 's/^/https:\/\/jojowiki.com/' > filepages
 
-# get list of "File:" pages: 
-echo "Downloading filepages..."
-grep "File:" $PAGENAME | cut -d '"' -f 8 | sed 's/^/https:\/\/jojowiki.com/' > filepages
+cat filepages | while read -r p
+        do
+                IMAGEURL=$( curl -s "$p" | grep og:image | cut -d \" -f 4 )
+                wget -q "$IMAGEURL"
+        done
 
-mkdir -p "${PAGENAME}_filepages"
-cd "${PAGENAME}_filepages"
-
-# download every page in filepages 
-wget -qi ../filepages && echo done
-
-# get actual image from file page
-echo "Scraping images from jojowiki..."
-
-mkdir ../"${PAGENAME}_images"
-cd ../"${PAGENAME}_images"
-
-for FILE in ../"${PAGENAME}_filepages"/*
-do
-	IMAGE="$( grep "og:image" $FILE | cut -d '"' -f 4 )"
-	wget $IMAGE
-done
-
-echo "Finished downloading $(ls | wc -l ) images"
-cd ..
-
-# Cleaning up
-
-rm filepages
-rm "$PAGENAME"
-rm -r "${PAGENAME}_filepages"
-
-# example command
-#
-# jojoscrape "https://jojowiki.com/Genga_Archive"
-
+echo "Finished downloading $(find . -name '*' -exec file {} \; | grep -o -P '^.+: \w+ image' | wc -l ) images"
